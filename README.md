@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎟️ GoersTicket - Platform Ticketing Event (GoersApp Clone)
 
-## Getting Started
+Platform ticketing event terintegrasi yang terinspirasi oleh **[GoersApp](https://www.goersapp.com/)**, dibangun dengan arsitektur modern **Next.js 16 (App Router)**, **React 19**, **Tailwind CSS**, **Prisma ORM**, dan **PostgreSQL**.
 
-First, run the development server:
+---
 
+## ✨ Fitur Utama
+
+### 🌐 Pengguna / Pembeli Tiket:
+- **Homepage Interaktif**: Hero section, pencarian instan (nama event & kota), filter kategori berikonik, highlight event pilihan, dan event trending.
+- **Jelajah Event (`/explore`)**: Filter pencarian real-time berdasarkan kata kunci, kategori (*Konser & Musik*, *Atraksi & Rekreasi*, *Festival*, *Olahraga*, *Workshop*, *Pameran Seni*), dan kota.
+- **Detail Event (`/events/[slug]`)**: Foto banner, informasi tanggal, lokasi venue & link Google Maps, deskripsi acara, syarat & ketentuan, dan **Ticket Tier Selection** interaktif dengan kuota dinamis.
+- **Checkout Cerdas (`/checkout`)**: Form pemesanan data kontak (Nama, Email, WhatsApp, NIK), kalkulasi biaya tiket + platform fee, dan pemilihan metode pembayaran Indonesia (**QRIS**, **BCA VA**, **Mandiri VA**, **GoPay**).
+- **Simulasi Pembayaran QRIS**: Modal pop-up dengan tampilan kode QRIS instan dan countdown timer.
+- **Tiket Saya (`/my-tickets`)**: Dompet tiket digital dengan kode QR asli (menggunakan library `qrcode`), badge status (*Aktif / Siap Digunakan* vs *Selesai Check-in*), detail pemegang tiket, dan tombol cetak tiket (*Print Ticket*).
+
+### 🎪 Penyelenggara Event (Organizer - GEM):
+- **Dashboard Penyelenggara (`/organizer`)**: Metrik pendapatan, jumlah tiket terjual, statistik kapasitas, dan daftar event aktif.
+- **Buat Event Baru (`/organizer/events/create`)**: Formulir lengkap untuk mempublikasikan acara baru dengan banner poster, jadwal, lokasi, dan **Multi-Tier Ticket Management** (tambah/hapus kategori tiket, atur harga, dan kuota).
+- **Onsite QR Scanner & Validator (`/organizer/scan`)**: Antarmuka pemindaian tiket gerbang masuk untuk panitia dengan validasi instan kode tiket, pencegahan tiket ganda (*Already Used*), dan riwayat pemindaian.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Library UI**: React 19, Lucide Icons, Canvas Confetti
+- **Styling**: Tailwind CSS v4 & Glassmorphism Theme
+- **Database & ORM**: PostgreSQL + Prisma Client v7
+- **QR Code Engine**: `qrcode` library
+
+---
+
+## 🚀 Cara Menjalankan
+
+### 1. Jalankan Mode Development
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+Buka browser di `http://localhost:3000`.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Menggunakan Database PostgreSQL (Opsional)
+Aplikasi sudah dilengkapi dengan in-memory data store yang kaya sehingga **dapat langsung digunakan tanpa setup database tambahan**. 
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Jika ingin menghubungkan ke PostgreSQL Anda:
+1. Buat file `.env` dan isi connection string:
+   ```env
+   DATABASE_URL="postgresql://username:password@localhost:5432/ticketing?schema=public"
+   ```
+2. Jalankan migrasi Prisma:
+   ```bash
+   npx prisma db push
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 3. Build Production
+```bash
+npm run build
+npm run start
+```
