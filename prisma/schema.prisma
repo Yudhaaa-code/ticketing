@@ -1,0 +1,189 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ORGANIZER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+  EXPIRED
+}
+
+enum PaymentMethod {
+  QRIS
+  BCA_VA
+  MANDIRI_VA
+  BNI_VA
+  BRI_VA
+  GOPAY
+  OVO
+  CREDIT_CARD
+}
+
+model User {
+  id            String      @id @default(cuid())
+  name          String
+  email         String      @unique
+  password      String?
+  phone         String?
+  role          Role        @default(USER)
+  avatar        String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  organizer     Organizer?
+  orders        Order[]
+}
+
+model Organizer {
+  id               String    @id @default(cuid())
+  userId           String    @unique
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizationName String
+  description      String?
+  logo             String?
+  verified         Boolean   @default(false)
+  phone            String?
+  website          String?
+  createdAt        DateTime  @default(now())
+  
+  events           Event[]
+}
+
+model Category {
+  id            String      @id @default(cuid())
+  name          String      @unique
+  slug          String      @unique
+  icon          String?
+  imageUrl      String?
+  events        Event[]
+}
+
+model Event {
+  id            String      @id @default(cuid())
+  title         String
+  slug          String      @unique
+  tagline       String?
+  description   String      @db.Text
+  terms         String?     @db.Text
+  bannerUrl     String
+  thumbnailUrl  String?
+  
+  categoryId    String
+  category      Category    @relation(fields: [categoryId], references: [id])
+  
+  organizerId   String
+  organizer     Organizer   @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  
+  venueName     String
+  address       String
+  city          String
+  mapsUrl       String?
+  
+  startDate     DateTime
+  endDate       DateTime
+  
+  isFeatured    Boolean     @default(false)
+  isPopular     Boolean     @default(false)
+  status        String      @default("PUBLISHED") // DRAFT, PUBLISHED, ENDED
+  
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  ticketTiers   TicketTier[]
+  orders        Order[]
+}
+
+model TicketTier {
+  id            String      @id @default(cuid())
+  eventId       String
+  event         Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  
+  name          String      // e.g. "VIP Pass", "Early Bird", "Regular"
+  description   String?
+  price         Float       @default(0)
+  quota         Int
+  soldCount     Int         @default(0)
+  maxPerOrder   Int         @default(5)
+  
+  salesStart    DateTime?
+  salesEnd      DateTime?
+  
+  orderItems    OrderItem[]
+  tickets       Ticket[]
+}
+
+model Order {
+  id            String        @id @default(cuid())
+  orderNumber   String        @unique // e.g. "GOERS-20260907-8821"
+  
+  userId        String?
+  user          User?         @relation(fields: [userId], references: [id])
+  
+  eventId       String
+  event         Event         @relation(fields: [eventId], references: [id])
+  
+  customerName  String
+  customerEmail String
+  customerPhone String
+  customerIdCard String?
+  
+  totalAmount   Float
+  platformFee   Float         @default(5000)
+  status        OrderStatus   @default(PENDING)
+  paymentMethod PaymentMethod @default(QRIS)
+  
+  paidAt        DateTime?
+  expiredAt     DateTime
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  
+  items         OrderItem[]
+  tickets       Ticket[]
+}
+
+model OrderItem {
+  id            String      @id @default(cuid())
+  orderId       String
+  order         Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  ticketTierId  String
+  ticketTier    TicketTier  @relation(fields: [ticketTierId], references: [id])
+  
+  quantity      Int
+  unitPrice     Float
+  subtotal      Float
+}
+
+model Ticket {
+  id            String      @id @default(cuid())
+  ticketCode    String      @unique // e.g. "TKT-GOERS-99321"
+  qrData        String
+  
+  orderId       String
+  order         Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  ticketTierId  String
+  ticketTier    TicketTier  @relation(fields: [ticketTierId], references: [id])
+  
+  attendeeName  String
+  attendeeEmail String
+  
+  isCheckedIn   Boolean     @default(false)
+  checkedInAt   DateTime?
+  
+  createdAt     DateTime    @default(now())
+}
