@@ -89,6 +89,7 @@ export interface Ticket {
   ticketCode: string;
   qrData: string;
   orderId: string;
+  orderStatus?: OrderStatus;
   ticketTierId: string;
   ticketTierName?: string;
   eventTitle?: string;

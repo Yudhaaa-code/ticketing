@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { 
   Music2, 
   FerrisWheel, 
-  Sparkles, 
+  Ticket, 
   Trophy, 
   GraduationCap, 
   Palette, 
@@ -17,7 +17,7 @@ import { initialCategories } from '@/lib/data';
 const iconMap: Record<string, any> = {
   Music2,
   FerrisWheel,
-  Sparkles,
+  Ticket,
   Trophy,
   GraduationCap,
   Palette,
@@ -28,15 +28,15 @@ export default function CategoryBar() {
   const currentCategory = searchParams.get('category');
 
   return (
-    <div className="w-full overflow-x-auto no-scrollbar py-2">
-      <div className="flex items-center gap-2.5 min-w-max">
+    <div className="w-full overflow-x-auto no-scrollbar py-1">
+      <div className="flex items-center gap-2 min-w-max">
         {/* Semua Event Button */}
         <Link
           href="/explore"
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-semibold transition-all ${
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all ${
             !currentCategory
-              ? 'bg-gradient-to-r from-indigo-600 to-pink-600 text-white shadow-md shadow-indigo-500/20'
-              : 'bg-slate-900/90 text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-800'
+              ? 'bg-slate-900 text-white shadow-xs'
+              : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <LayoutGrid className="w-4 h-4" />
@@ -45,17 +45,17 @@ export default function CategoryBar() {
 
         {/* Categories */}
         {initialCategories.map((cat) => {
-          const Icon = cat.icon ? iconMap[cat.icon] || Sparkles : Sparkles;
+          const Icon = cat.icon ? iconMap[cat.icon] || Ticket : Ticket;
           const isActive = currentCategory === cat.slug;
 
           return (
             <Link
               key={cat.id}
               href={`/explore?category=${cat.slug}`}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-semibold transition-all ${
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all ${
                 isActive
-                  ? 'bg-gradient-to-r from-indigo-600 to-pink-600 text-white shadow-md shadow-indigo-500/20'
-                  : 'bg-slate-900/90 text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-800'
+                  ? 'bg-orange-600 text-white shadow-xs'
+                  : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
               }`}
             >
               <Icon className="w-4 h-4" />

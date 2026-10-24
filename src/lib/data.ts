@@ -8,7 +8,6 @@ export const initialCategories: Category[] = [
     slug: 'konser-musik',
     icon: 'Music2',
     imageUrl: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop&q=80',
-    color: 'from-fuchsia-500 to-pink-600',
   },
   {
     id: 'cat-attractions',
@@ -16,7 +15,6 @@ export const initialCategories: Category[] = [
     slug: 'atraksi-rekreasi',
     icon: 'FerrisWheel',
     imageUrl: 'https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?w=800&auto=format&fit=crop&q=80',
-    color: 'from-amber-500 to-orange-600',
   },
   {
     id: 'cat-festivals',
@@ -24,7 +22,6 @@ export const initialCategories: Category[] = [
     slug: 'festival-budaya',
     icon: 'Sparkles',
     imageUrl: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&auto=format&fit=crop&q=80',
-    color: 'from-violet-600 to-indigo-600',
   },
   {
     id: 'cat-sports',
@@ -32,7 +29,6 @@ export const initialCategories: Category[] = [
     slug: 'olahraga',
     icon: 'Trophy',
     imageUrl: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&auto=format&fit=crop&q=80',
-    color: 'from-emerald-500 to-teal-600',
   },
   {
     id: 'cat-workshop',
@@ -40,7 +36,6 @@ export const initialCategories: Category[] = [
     slug: 'workshop-edukasi',
     icon: 'GraduationCap',
     imageUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&auto=format&fit=crop&q=80',
-    color: 'from-blue-500 to-cyan-600',
   },
   {
     id: 'cat-arts',
@@ -48,7 +43,6 @@ export const initialCategories: Category[] = [
     slug: 'pameran-seni',
     icon: 'Palette',
     imageUrl: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=800&auto=format&fit=crop&q=80',
-    color: 'from-rose-500 to-red-600',
   },
 ];
 
@@ -429,8 +423,9 @@ export const initialTickets: Ticket[] = [
   {
     id: 'tkt-demo-1',
     ticketCode: 'VIP-SW8829',
-    qrData: 'GOERS:TKT:VIP-SW8829:evt-1:tier-1-2',
+    qrData: 'PASSGO:TKT:VIP-SW8829:evt-1:tier-1-2',
     orderId: 'ord-demo-1',
+    orderStatus: 'PAID',
     ticketTierId: 'tier-1-2',
     ticketTierName: 'VIP Front Row Experience',
     eventTitle: 'Jakarta SoundWave Festival 2026',
@@ -445,8 +440,9 @@ export const initialTickets: Ticket[] = [
   {
     id: 'tkt-demo-2',
     ticketCode: 'REG-DF1142',
-    qrData: 'GOERS:TKT:REG-DF1142:evt-2:tier-2-2',
+    qrData: 'PASSGO:TKT:REG-DF1142:evt-2:tier-2-2',
     orderId: 'ord-demo-2',
+    orderStatus: 'PAID',
     ticketTierId: 'tier-2-2',
     ticketTierName: 'Reguler Weekend / Holiday Ticket',
     eventTitle: 'Dunia Fantasi (Dufan) Annual Pass & Day Ticket',
@@ -463,7 +459,7 @@ export const initialTickets: Ticket[] = [
 export const initialOrders: Order[] = [
   {
     id: 'ord-demo-1',
-    orderNumber: 'GOERS-20260905-1842',
+    orderNumber: 'PASSGO-20260905-1842',
     eventId: 'evt-1',
     customerName: 'Budi Santoso',
     customerEmail: 'budi.santoso@example.com',
@@ -633,8 +629,9 @@ export const dataService = {
         tickets.push({
           id: `tkt-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
           ticketCode,
-          qrData: `GOERS:TKT:${ticketCode}:${event.id}:${item.ticketTierId}`,
+          qrData: `PASSGO:TKT:${ticketCode}:${event.id}:${item.ticketTierId}`,
           orderId,
+          orderStatus: 'PENDING',
           ticketTierId: item.ticketTierId,
           ticketTierName: tier?.name,
           eventTitle: event.title,
@@ -660,9 +657,9 @@ export const dataService = {
       customerIdCard: payload.customerIdCard,
       totalAmount: totalAmount + platformFee,
       platformFee,
-      status: 'PAID', // Instant success for simulation, or PENDING
+      status: 'PENDING', // Menunggu konfirmasi pembayaran
       paymentMethod: payload.paymentMethod,
-      paidAt: new Date().toISOString(),
+      paidAt: null,
       expiredAt: new Date(Date.now() + 24 * 3600000).toISOString(),
       createdAt: new Date().toISOString(),
       items: orderItems.map((oi) => ({ ...oi, orderId })),
@@ -691,15 +688,58 @@ export const dataService = {
 
   getUserTickets(email?: string): Ticket[] {
     const tickets = globalThis.__mockTickets || initialTickets;
-    if (!email) return tickets;
-    return tickets.filter((t) => t.attendeeEmail.toLowerCase() === email.toLowerCase());
+    const orders = globalThis.__mockOrders || initialOrders;
+
+    const enriched = tickets.map((t) => {
+      const order = orders.find((o) => o.id === t.orderId);
+      return {
+        ...t,
+        orderStatus: order ? order.status : (t.orderStatus || 'PENDING'),
+      };
+    });
+
+    if (!email) return enriched;
+    return enriched.filter((t) => t.attendeeEmail.toLowerCase() === email.toLowerCase());
   },
 
   getTicketByCode(ticketCode: string): Ticket | undefined {
     const tickets = globalThis.__mockTickets || initialTickets;
-    return tickets.find(
+    const orders = globalThis.__mockOrders || initialOrders;
+    const ticket = tickets.find(
       (t) => t.ticketCode.toLowerCase() === ticketCode.toLowerCase() || t.qrData.includes(ticketCode)
     );
+    if (!ticket) return undefined;
+
+    const order = orders.find((o) => o.id === ticket.orderId);
+    return {
+      ...ticket,
+      orderStatus: order ? order.status : (ticket.orderStatus || 'PENDING'),
+    };
+  },
+
+  payOrder(orderIdOrNumber: string): { success: boolean; message: string; order?: Order } {
+    const orders = globalThis.__mockOrders || initialOrders;
+    const order = orders.find((o) => o.id === orderIdOrNumber || o.orderNumber === orderIdOrNumber);
+    if (!order) {
+      return { success: false, message: 'Pesanan tidak ditemukan' };
+    }
+
+    order.status = 'PAID';
+    order.paidAt = new Date().toISOString();
+    order.paymentRef = `PAY-PASSGO-${Date.now()}`;
+
+    const tickets = globalThis.__mockTickets || initialTickets;
+    tickets.forEach((t) => {
+      if (t.orderId === order.id) {
+        t.orderStatus = 'PAID';
+      }
+    });
+
+    return {
+      success: true,
+      message: 'Pembayaran berhasil dikonfirmasi! E-Tiket Anda sekarang aktif dan dapat digunakan.',
+      order,
+    };
   },
 
   checkInTicket(ticketCode: string): { success: boolean; message: string; ticket?: Ticket } {
@@ -707,6 +747,15 @@ export const dataService = {
     if (!ticket) {
       return { success: false, message: 'Tiket tidak ditemukan dalam sistem.' };
     }
+
+    if (ticket.orderStatus !== 'PAID') {
+      return {
+        success: false,
+        message: 'Tiket belum dapat digunakan! Pembayaran pesanan belum lunas (Status: Menunggu Pembayaran). Silakan selesaikan pembayaran terlebih dahulu.',
+        ticket,
+      };
+    }
+
     if (ticket.isCheckedIn) {
       return {
         success: false,
@@ -718,6 +767,13 @@ export const dataService = {
     ticket.isCheckedIn = true;
     ticket.checkedInAt = new Date().toISOString();
 
+    const rawTickets = globalThis.__mockTickets || initialTickets;
+    const rawT = rawTickets.find((t) => t.id === ticket.id);
+    if (rawT) {
+      rawT.isCheckedIn = true;
+      rawT.checkedInAt = ticket.checkedInAt;
+    }
+
     return {
       success: true,
       message: 'Check-in berhasil! Selamat menikmati event.',
@@ -725,3 +781,23 @@ export const dataService = {
     };
   },
 };
+
+// Reset dynamic mock orders without payment to PENDING state
+if (typeof globalThis !== 'undefined') {
+  if (globalThis.__mockOrders) {
+    globalThis.__mockOrders.forEach((o) => {
+      if (o.id !== 'ord-demo-1') {
+        o.status = 'PENDING';
+        o.paidAt = null;
+        o.paymentRef = undefined;
+      }
+    });
+  }
+  if (globalThis.__mockTickets) {
+    globalThis.__mockTickets.forEach((t) => {
+      if (t.orderId !== 'ord-demo-1') {
+        t.orderStatus = 'PENDING';
+      }
+    });
+  }
+}

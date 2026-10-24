@@ -2,29 +2,17 @@
 
 @layer base {
   :root {
-    --primary: #6366f1;
-    --primary-hover: #4f46e5;
-    --accent: #ec4899;
+    --primary: #ea580c;
+    --primary-hover: #c2410c;
+    --primary-subtle: #fff7ed;
+    --accent: #0f172a;
+    --surface: #ffffff;
+    --background: #f8fafc;
+    --border: #e2e8f0;
   }
 }
 
-/* Custom modern animations & glassmorphism */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.dark .glass-panel {
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.hero-gradient {
-  background: radial-gradient(circle at 50% -20%, #4338ca 0%, #1e1b4b 50%, #09090b 100%);
-}
-
+/* Ticket notch for ticket voucher design */
 .ticket-notch-left {
   position: relative;
 }
@@ -37,7 +25,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: #09090b;
+  background-color: var(--background, #f8fafc);
 }
 
 .ticket-notch-right {
@@ -52,7 +40,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: #09090b;
+  background-color: var(--background, #f8fafc);
 }
 
 /* Hide scrollbar for category tabs */

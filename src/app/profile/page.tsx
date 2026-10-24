@@ -3,15 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { 
-  User, 
   ArrowLeft, 
-  Mail, 
-  Phone, 
-  CreditCard, 
   CheckCircle2, 
-  ShieldCheck, 
-  Ticket,
-  LayoutDashboard
+  Ticket
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
@@ -39,12 +33,12 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="max-w-md mx-auto px-4 py-20 text-center space-y-4">
-        <h2 className="text-xl font-bold text-white">Silakan Masuk Terlebih Dahulu</h2>
-        <p className="text-xs text-slate-400">Anda perlu masuk untuk mengelola profil.</p>
+      <div className="max-w-md mx-auto px-4 py-20 text-center space-y-4 bg-slate-50 min-h-screen">
+        <h2 className="text-xl font-bold text-slate-900">Silakan Masuk Terlebih Dahulu</h2>
+        <p className="text-xs text-slate-500">Anda perlu masuk untuk mengelola profil.</p>
         <Link
           href="/login?redirect=/profile"
-          className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold inline-block"
+          className="px-5 py-2.5 rounded-lg bg-orange-600 text-white text-xs font-bold inline-block shadow-sm"
         >
           Masuk Sekarang
         </Link>
@@ -53,11 +47,11 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full bg-slate-50 min-h-screen">
       <div className="mb-6">
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Kembali ke Dashboard Tiket</span>
@@ -66,40 +60,40 @@ export default function ProfilePage() {
 
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
             Profil Pengguna
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
             Kelola data diri untuk mempermudah pemesanan dan verifikasi tiket event
           </p>
         </div>
 
         <Link
           href="/dashboard"
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 text-xs font-semibold transition-all"
+          className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 text-xs font-semibold transition-all shadow-xs"
         >
-          <Ticket className="w-4 h-4 text-pink-400" />
+          <Ticket className="w-4 h-4 text-orange-600" />
           <span>Tiket Saya</span>
         </Link>
       </div>
 
       {saved && (
-        <div className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+        <div className="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
           <span>Profil berhasil diperbarui!</span>
         </div>
       )}
 
-      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/90 border border-slate-800 shadow-xl space-y-6">
+      <div className="p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-6">
         {/* Avatar & Header */}
-        <div className="flex items-center gap-4 pb-6 border-b border-slate-800">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-pink-500 flex items-center justify-center text-2xl font-black text-white uppercase shadow-md">
+        <div className="flex items-center gap-4 pb-6 border-b border-slate-100">
+          <div className="w-14 h-14 rounded-xl bg-orange-600 flex items-center justify-center text-xl font-black text-white uppercase shadow-sm">
             {user.name.charAt(0)}
           </div>
           <div>
-            <h3 className="text-lg font-bold text-white">{user.name}</h3>
-            <p className="text-xs text-slate-400">{user.email}</p>
-            <span className="mt-1 inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+            <h3 className="text-lg font-bold text-slate-900">{user.name}</h3>
+            <p className="text-xs text-slate-500">{user.email}</p>
+            <span className="mt-1 inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-orange-50 text-orange-700 border border-orange-200">
               Role: {user.role}
             </span>
           </div>
@@ -107,7 +101,7 @@ export default function ProfilePage() {
 
         <form onSubmit={handleSave} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
               Nama Lengkap (sesuai KTP/SIM)
             </label>
             <input
@@ -115,52 +109,52 @@ export default function ProfilePage() {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
+              className="w-full px-3.5 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:outline-none focus:bg-white focus:border-orange-500 transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
               Alamat Email (Akun)
             </label>
             <input
               type="email"
               disabled
               value={user.email}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/50 border border-slate-800 text-sm text-slate-400 cursor-not-allowed"
+              className="w-full px-3.5 py-2.5 rounded-lg bg-slate-100 border border-slate-200 text-sm text-slate-500 cursor-not-allowed"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                 Nomor WhatsApp / HP
               </label>
               <input
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-3.5 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:outline-none focus:bg-white focus:border-orange-500 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                 Nomor NIK / Identitas
               </label>
               <input
                 type="text"
                 value={idCard}
                 onChange={(e) => setIdCard(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-3.5 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:outline-none focus:bg-white focus:border-orange-500 transition-all"
               />
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-800 flex justify-end">
+          <div className="pt-4 border-t border-slate-100 flex justify-end">
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-pink-600 hover:opacity-95 text-white font-bold text-xs shadow-md transition-all"
+              className="px-6 py-2.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs shadow-sm transition-all"
             >
               Simpan Perubahan
             </button>

@@ -29,9 +29,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check saved session in localStorage
     try {
-      const savedUser = localStorage.getItem('goers_auth_user');
+      const savedUser = localStorage.getItem('passgo_auth_user');
       if (savedUser) {
         setUser(JSON.parse(savedUser));
       }
@@ -50,21 +49,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       email,
       role,
       avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`,
-      organizationName: role === 'ADMIN' ? 'Goers Official Promoter' : undefined,
+      organizationName: role === 'ADMIN' ? 'PassGo Official Promoter' : undefined,
     };
 
     setUser(newUser);
-    localStorage.setItem('goers_auth_user', JSON.stringify(newUser));
+    localStorage.setItem('passgo_auth_user', JSON.stringify(newUser));
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('goers_auth_user');
+    localStorage.removeItem('passgo_auth_user');
   };
 
   const loginAsDemo = (role: 'ADMIN' | 'USER') => {
     if (role === 'ADMIN') {
-      login('admin@goersapp.id', 'ADMIN', 'Administrator Goers');
+      login('admin@passgo.id', 'ADMIN', 'Administrator PassGo');
     } else {
       login('budi.santoso@example.com', 'USER', 'Budi Santoso');
     }

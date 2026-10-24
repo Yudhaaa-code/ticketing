@@ -40,7 +40,7 @@ export function formatDateTimeIndo(dateStr: string): string {
 export function generateOrderNumber(): string {
   const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
   const rand = Math.floor(1000 + Math.random() * 9000);
-  return `GOERS-${dateStr}-${rand}`;
+  return `PASSGO-${dateStr}-${rand}`;
 }
 
 export function generateTicketCode(tierName: string): string {

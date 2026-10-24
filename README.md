@@ -1,6 +1,6 @@
-# 🎟️ GoersTicket - Platform Ticketing Event (GoersApp Clone)
+# 🎟️ PassGo - Platform Tiket Konser, Atraksi, & Event Indonesia
 
-Platform ticketing event terintegrasi yang terinspirasi oleh **[GoersApp](https://www.goersapp.com/)**, dibangun dengan arsitektur modern **Next.js 16 (App Router)**, **React 19**, **Tailwind CSS**, **Prisma ORM**, dan **PostgreSQL**.
+Platform ticketing event terintegrasi yang dibangun dengan arsitektur modern **Next.js 16 (App Router)**, **React 19**, **Tailwind CSS**, **Prisma ORM**, dan **PostgreSQL**. Desain bersih berorientasi visual poster, bertema *Clean & Vibrant* dengan aksen *Flame Orange*.
 
 ---
 
